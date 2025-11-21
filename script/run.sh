@@ -8,14 +8,14 @@
 #SBATCH --mem=128G
 #SBATCH --time=24:00:00
 
-cd /home/leeg/Adaptive-Rank-for-LoRA
+cd /home/ahnjm/adalora/Adaptive-Rank-for-LoRA
 
 # UV 가상환경 활성화
 source .venv/bin/activate
 
 echo "CUDA: $(python -c 'import torch; print(torch.cuda.is_available())')"
 
-CUDA_DEVICE=1 python src/glue-sst2.py --method lora --budget small
+CUDA_DEVICE=1 python src/rank_AdaLoRA.py #glue-sst2.py --method adalora --budget small
     
 echo ""
 echo "=== 테스트 완료 ==="

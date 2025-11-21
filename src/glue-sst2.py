@@ -12,6 +12,7 @@ import evaluate
 
 from transformers import (
     AutoTokenizer,
+    AutoConfig,   #수정
     AutoModelForSequenceClassification,
     DataCollatorWithPadding,
     TrainingArguments,
@@ -76,8 +77,8 @@ def get_peft_config(method: str, budget: str, total_step: int = None):
     """
     if method == "lora":
         if budget == "small":
-            r = 2
-            alpha = 8
+            r = 2 
+            alpha = 8 
         else:  # large
             r = 8
             alpha = 32
@@ -112,7 +113,7 @@ def get_peft_config(method: str, budget: str, total_step: int = None):
             task_type=TaskType.SEQ_CLS,
             init_r=init_r,
             target_r=target_r,
-            lora_alpha=32,
+            lora_alpha=8,    #수정 32 -> 8
             lora_dropout=0.0,
             bias="none",
             target_modules=TARGET_MODULES,
@@ -156,7 +157,7 @@ def main():
 
     # 1) 데이터셋 & 토크나이저
     raw_datasets = load_dataset("glue", "sst2")
-    tokenizer = AutoTokenizer.from_pretrained(model_name, use_fast=False)
+    tokenizer = AutoTokenizer.from_pretrained(model_name, use_fast=False)  #classifier_dropout=0.15
 
     def preprocess_fn(examples):
         return tokenizer(
@@ -172,9 +173,16 @@ def main():
     )
 
     # 2) 모델 로드
+    config = AutoConfig.from_pretrained(
+        model_name,
+        classifier_dropout=0.0, # 수정
+        num_labels=2, 
+    )
+
+    # 2) 모델 로드
     model = AutoModelForSequenceClassification.from_pretrained(
         model_name,
-        num_labels=2,
+        config=config
     )
 
     # 3) LoRA / AdaLoRA 설정
@@ -218,7 +226,9 @@ def main():
         save_total_limit=2,
         seed=args.seed,
         fp16=torch.cuda.is_available(),
+        warmup_ratio=0.1,    #warmup ratio 0.1 #수정
     )
+    
 
     # 6) Trainer
     trainer = Trainer(
