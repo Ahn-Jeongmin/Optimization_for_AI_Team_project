@@ -22,6 +22,7 @@ from transformers import (
 from peft import (
     LoraConfig,
     AdaLoraConfig,
+    AdaLoraModel,
     get_peft_model,
     TaskType,
 )
@@ -119,9 +120,9 @@ def get_peft_config(method: str, budget: str, total_step: int = None):
             target_modules=TARGET_MODULES,
             total_step=total_step,
             # ===== 논문 Table 8 의 SST-2 설정 =====
-            tinit=6000,     # ti
-            tfinal=22000,   # tf
-            deltaT=100,     # ΔT
+            tinit=6000,     # ti: 6000
+            tfinal=22000,   # tf: 22000
+            deltaT=100,     # ΔT : 매번 pruning하지 않고 100 스텝마다 한 번씩만 중요도를 검사해서 자름
             beta1=0.85,     # 중요도 EMA
             beta2=0.85,
             orth_reg_weight=0.1,  # γ (orthogonality regularizer)
@@ -195,6 +196,7 @@ def main():
     
     peft_config = get_peft_config(args.method, args.budget, total_step=total_steps if args.method == "adalora" else None)
     model = get_peft_model(model, peft_config)
+    # model = AdaLoraModel(model, peft_config, "default")
 
     print("==== Trainable parameter statistics ====")
     print_trainable_parameters(model)
@@ -220,7 +222,7 @@ def main():
         num_train_epochs=24,               # #epochs 24
         weight_decay=0.01,
         logging_steps=50,
-        load_best_model_at_end=True,
+        load_best_model_at_end=False,
         metric_for_best_model="accuracy",
         greater_is_better=True,
         save_total_limit=2,
