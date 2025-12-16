@@ -199,3 +199,14 @@ Our citation list is below.
   }
   ```
 
+---
+
+## Contribution / Original Repository
+### Contribution
+
+[![GitHub](https://img.shields.io/badge/GitHub-Ahn--Jeongmin-181717?logo=github&logoColor=white)](https://github.com/Ahn-Jeongmin)
+[![GitHub](https://img.shields.io/badge/GitHub-Lee--Gyun-181717?logo=github&logoColor=white)](https://github.com/gyunini)
+
+
+### Original Repository
+[Adaptive-Rank-for-LoRA](https://github.com/gyunini/Adaptive-Rank-for-LoRA)
