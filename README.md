@@ -106,6 +106,7 @@ This stage, we experimented a new design of LoRA, combining AdaLoRA with QLoRA.
 We aimed to apply quantization to AdaLoRA, which we expected to lead to the enhanced performance by concentrating capacity on the most important ranks.
 
 <img width="500" height="360" alt="image" src="https://github.com/user-attachments/assets/915eda93-c209-40ea-9bd2-02b7810576ff" />
+
 * Base PLM 4-bit Quantization (*QLoRA method)
 * Adapter SVD / Dropout (*AdaLoRA Method) & Weight Update (*QLoRA Method)
 
